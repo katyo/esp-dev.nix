@@ -1,19 +1,22 @@
 { stdenv, lib, fetchurl, makeWrapper, buildFHSUserEnv }:
 
 let
+  helper = import ./tools-helper.nix {};
+  toolchain = helper.get-tool "openocd-esp32" stdenv.system;
+  version = helper.get-version "ocd" toolchain;
+
   fhsEnv = buildFHSUserEnv {
     name = "esp32-openocd-env";
     targetPkgs = pkgs: with pkgs; [ zlib libusb1 ];
     runScript = "";
   };
 in
-stdenv.mkDerivation rec {
+stdenv.mkDerivation {
   pname = "openocd";
-  version = "0.11.0-esp32-20220706";
+  inherit version;
 
   src = fetchurl {
-    url = "https://github.com/espressif/openocd-esp32/releases/download/v${version}/openocd-esp32-linux-amd64-${version}.tar.gz";
-    hash = "sha256-JvHxjdk+twoTIDhI0/scwuDeH9Z0nH3XcbLehwlzWu0=";
+    inherit (toolchain) url sha256;
   };
 
   buildInputs = [ makeWrapper ];
