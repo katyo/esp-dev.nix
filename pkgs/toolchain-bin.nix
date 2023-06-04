@@ -1,4 +1,4 @@
-{ name, stdenv, lib, fetchurl, makeWrapper, buildFHSUserEnv, python27 }:
+{ name, stdenv, lib, fetchurl, makeWrapper, buildFHSEnv, python27, python311 }:
 
 let
   helper = import ./tools-helper.nix {};
@@ -9,12 +9,12 @@ let
   homepage = "https://docs.espressif.com/projects/" +
     (if name == "esp8266" then "esp8266-rtos-sdk/en/latest" else "esp-idf/en/stable") +
     "/get-started/linux-setup.html";
-
-  fhsEnv = buildFHSUserEnv {
+  #python = python311;
+  fhsEnv = buildFHSEnv {
     name = "${pname}-env";
     targetPkgs = pkgs: with pkgs; [
       zlib
-      python27.pkgs.python
+      #python.pkgs.python # *-gdb-py support
     ];
     runScript = "";
   };
@@ -46,4 +46,3 @@ stdenv.mkDerivation {
     license = licenses.gpl3;
   };
 }
-

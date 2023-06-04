@@ -11,7 +11,11 @@ final: prev:
 
   openocd-esp32-bin = prev.callPackage ./pkgs/openocd-esp32-bin.nix { };
 
+  esp-idf-python = prev.callPackage ./pkgs/python-env.nix { };
+
   esp-idf = prev.callPackage ./pkgs/esp-idf { };
+
+  esp-tool = final.esp-idf-python.pkgs.callPackage ./pkgs/python/esptool.nix { };
 
   # ESP8266
   gcc-xtensa-lx106-elf-bin = prev.callPackage ./pkgs/toolchain-bin.nix { name = "esp8266"; };
